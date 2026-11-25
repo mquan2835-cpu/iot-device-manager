@@ -1,0 +1,18 @@
+# Thư viện cài bằng npm (rất nặng, ai tải về chỉ cần chạy npm install)
+node_modules/
+
+# File cấu hình chứa mật khẩu thật (MySQL, JWT, MQTT) - KHÔNG đưa lên GitHub
+.env
+
+# File sinh ra khi build / chạy
+dist/
+*.log
+npm-debug.log*
+
+# File rác của hệ điều hành / trình soạn thảo
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Bản firmware có mật khẩu Wi-Fi / MQTT thật - chỉ giữ trên máy, dùng để nạp board
+_rieng_tu/

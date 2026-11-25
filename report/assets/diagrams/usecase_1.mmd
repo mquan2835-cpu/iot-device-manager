@@ -1,0 +1,25 @@
+flowchart LR
+    User((Người dùng))
+    HW((Thiết bị<br/>phần cứng))
+    SYS((Hệ thống<br/>Backend))
+
+    UC1([UC01 - Đăng nhập / Đăng ký])
+    UC2([UC02 - Xem Dashboard thời gian thực])
+    UC3([UC03 - Điều khiển thiết bị Bật/Tắt])
+    UC4([UC04 - Xem dữ liệu cảm biến])
+    UC5([UC05 - Xem lịch sử hành động])
+    UC6([UC06 - Quản lý hồ sơ & danh sách thiết bị])
+    UC7([UC07 - Cảnh báo & tự xử lý khi vượt ngưỡng *bonus])
+
+    User --- UC1
+    User --- UC2
+    User --- UC3
+    User --- UC4
+    User --- UC5
+    User --- UC6
+    UC3 -.gửi lệnh MQTT.-> HW
+    HW -.publish dữ liệu cảm biến.-> UC4
+    HW -.publish trạng thái.-> UC2
+    SYS --- UC7
+    UC7 -.tự động gửi lệnh MQTT.-> HW
+    UC7 -.cảnh báo realtime.-> User

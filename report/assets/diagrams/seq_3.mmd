@@ -1,0 +1,13 @@
+sequenceDiagram
+    actor U as Người dùng
+    participant FE as Frontend
+    participant BE as Backend
+    participant DB as MySQL (User)
+
+    U->>FE: Nhập email/password
+    FE->>BE: POST /api/auth/login
+    BE->>DB: SELECT * FROM User WHERE email=?
+    DB-->>BE: user row (password_hash)
+    BE->>BE: bcrypt.compare(password, password_hash)
+    BE-->>FE: 200 OK { token: JWT }
+    FE-->>U: Chuyển hướng vào Dashboard

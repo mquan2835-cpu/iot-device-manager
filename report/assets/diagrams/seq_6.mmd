@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant HW as NodeMCU (DHT11)
+    participant MQ as MQTT Broker
+    participant BE as Backend (MQTT subscriber)
+    participant DB as MySQL (DataSensor/ActionHistory/Device)
+    participant FE as Frontend (Dashboard)
+    actor U as Người dùng
+
+    HW->>MQ: PUBLISH home/sensor/1/data { value: 33.5 }
+    MQ->>BE: forward message
+    BE->>DB: INSERT DataSensor(sensor_id=1, value=33.5)
+    BE->>BE: So sánh value với TEMP_ALERT_THRESHOLD (mặc định 32°C)
+
+    alt value > threshold VÀ Điều hòa đang OFF
+        BE->>DB: INSERT ActionHistory(device_id=3, action=ON, triggered_by='system', status=pending)
+        BE->>MQ: PUBLISH home/device/3/set payload="ON"
+        MQ->>HW: forward message
+        HW->>HW: digitalWrite(AC_LED_PIN, HIGH)
+        HW->>MQ: PUBLISH home/device/3/status payload="ON"
+        MQ->>BE: forward message
+        BE->>DB: UPDATE ActionHistory SET status=success
+        BE->>DB: UPDATE Device SET current_state=ON
+        BE->>FE: emit alert:threshold { auto_action: true, message } + device:update
+        FE-->>U: Hiện banner cảnh báo đỏ "Nhiệt độ vượt ngưỡng - đã tự động bật Điều hòa"
+    else value > threshold NHƯNG Điều hòa đã ON sẵn
+        BE->>FE: emit alert:threshold { auto_action: false, message }
+        FE-->>U: Chỉ hiện banner cảnh báo, không đổi trạng thái nút
+    else value trong ngưỡng an toàn
+        Note over BE: Không làm gì thêm
+    end

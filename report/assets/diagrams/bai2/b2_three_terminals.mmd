@@ -1,0 +1,19 @@
+flowchart LR
+    subgraph T1["Terminal 1: giả lập phần cứng"]
+        H1["3 LED ảo: Đèn / Quạt / Điều hòa"]
+        H2["DHT11 ảo: nhiệt độ + độ ẩm"]
+    end
+    subgraph T2["Terminal 2: giả lập Backend"]
+        B1["Nhập lệnh: 1 ON, 3 OFF..."]
+        B2["Bộ đếm timeout 5 s<br/>+ kiểm tra ngưỡng 32°C"]
+    end
+    subgraph T3["Terminal 3: quan sát Broker"]
+        M1["SUBSCRIBE home/#"]
+    end
+    BR(("MQTT Broker<br/>localhost:1883"))
+    T2 -- "PUBLISH home/device/{id}/set" --> BR
+    BR -- "home/device/{id}/set" --> T1
+    T1 -- "PUBLISH home/device/{id}/status<br/>PUBLISH home/sensor/{1,2}/data" --> BR
+    BR -- "home/device/+/status<br/>home/sensor/+/data" --> T2
+    BR -- "mọi gói tin home/..." --> T3
+    style BR fill:#DBEAFE,stroke:#1D4ED8,stroke-width:2px

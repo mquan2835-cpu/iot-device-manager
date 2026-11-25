@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant T2 as Terminal 2 (Backend giả lập)
+    participant BR as MQTT Broker
+    participant T1 as Terminal 1 (Phần cứng giả lập)
+    participant T3 as Terminal 3 (Monitor home/#35;)
+
+    Note over T1,T2: Khởi động: T1 SUBSCRIBE home/device/+/set, T2 SUBSCRIBE home/device/+/status, home/sensor/+/data, T3 SUBSCRIBE home/#35;
+    T2->>T2: Người dùng gõ "1 ON" -> giả lập INSERT ActionHistory(pending)
+    T2->>BR: PUBLISH home/device/1/set {"action":"ON"}
+    T2->>T2: Bắt đầu đếm ACTION_TIMEOUT_MS = 5000 ms
+    BR-->>T3: home/device/1/set {"action":"ON"}
+    alt Terminal 1 đang online (Kịch bản 1)
+        BR->>T1: home/device/1/set {"action":"ON"}
+        T1->>T1: Giả lập digitalWrite(GPIO5, HIGH)
+        T1->>BR: PUBLISH home/device/1/status {"device_id":1,"state":"ON"}
+        BR->>T2: home/device/1/status
+        BR-->>T3: home/device/1/status
+        T2->>T2: Huỷ đếm giờ, in thời gian phản hồi, status = success
+    else Terminal 1 đã gõ "offline" (Kịch bản 2)
+        Note over BR,T1: Không còn subscriber nào cho home/device/1/set nên gói tin bị bỏ (QoS 0)
+        T2->>T2: Hết 5000 ms vẫn pending -> status = timeout
+    end

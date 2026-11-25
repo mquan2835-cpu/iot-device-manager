@@ -1,0 +1,8 @@
+flowchart TD
+    A([Cấp nguồn / Reset]) --> B["Serial.begin(115200)<br/>pinMode 3 chân LED = OUTPUT<br/>digitalWrite LOW cả 3 LED<br/>dht.begin()"]
+    B --> C["setupWifi(): WiFi.mode(STA)<br/>WiFi.begin(SSID, PASSWORD)"]
+    C --> C1{"WiFi.status() ==<br/>WL_CONNECTED?"}
+    C1 -- Chưa --> C2["delay(400)"] --> C1
+    C1 -- Rồi --> D["In địa chỉ IP<br/>clientId = esp-iot-node-&lt;chipId&gt;"]
+    D --> E["setServer(MQTT_BROKER, 1883)<br/>setCallback(onMqttMessage)"]
+    E --> F([Chuyển sang loop])

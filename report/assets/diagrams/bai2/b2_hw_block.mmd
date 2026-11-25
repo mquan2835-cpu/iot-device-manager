@@ -1,0 +1,11 @@
+flowchart LR
+    DHT["Cảm biến DHT11<br/>nhiệt độ + độ ẩm"] -- "DATA (1 dây) -> GPIO10" --> MCU
+    subgraph MCU["ESP32-C3 Super Mini"]
+        FW["Firmware iot_device_node.ino<br/>Wi-Fi + PubSubClient + ArduinoJson"]
+    end
+    MCU -- "GPIO5" --> L1["LED Đèn + 220Ω"]
+    MCU -- "GPIO6" --> L2["LED Quạt + 220Ω"]
+    MCU -- "GPIO7" --> L3["LED Điều hòa + 220Ω"]
+    MCU <-- "Wi-Fi / TCP 1883<br/>MQTT" --> BR(("MQTT Broker"))
+    BR <--> BE["Backend Node.js<br/>(Bài 3)"]
+    style BR fill:#DBEAFE,stroke:#1D4ED8,stroke-width:2px

@@ -1,0 +1,13 @@
+flowchart TD
+    R["home"] --> D["device"]
+    R --> S["sensor"]
+    D --> D1["1 (Đèn)"]
+    D --> D2["2 (Quạt)"]
+    D --> D3["3 (Điều hòa)"]
+    D1 --> D1S["set<br/>Backend → HW<br/>{&quot;action&quot;:&quot;ON&quot;}"]
+    D1 --> D1T["status<br/>HW → Backend<br/>{&quot;device_id&quot;:1,&quot;state&quot;:&quot;ON&quot;}"]
+    D2 --> D2X["set / status"]
+    D3 --> D3X["set / status"]
+    S --> S1["1 (nhiệt độ)"] --> S1D["data<br/>HW → Backend<br/>value °C"]
+    S --> S2["2 (độ ẩm)"] --> S2D["data<br/>HW → Backend<br/>value %"]
+    style R fill:#DBEAFE,stroke:#1D4ED8

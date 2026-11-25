@@ -1,0 +1,55 @@
+erDiagram
+    USER ||--o{ DEVICE : "sở hữu"
+    USER ||--o{ ACTION_HISTORY : "thực hiện"
+    DEVICE ||--o{ ACTION_HISTORY : "bị tác động"
+    SENSOR ||--o{ DATA_SENSOR : "sinh ra"
+
+    USER {
+        int id PK
+        varchar full_name
+        varchar email UK
+        varchar password_hash
+        enum role "admin, user"
+        datetime created_at
+    }
+
+    DEVICE {
+        int id PK
+        varchar name
+        enum device_type "light, fan, air_conditioner"
+        varchar location
+        varchar mqtt_topic_control
+        varchar mqtt_topic_status
+        enum current_state "ON, OFF"
+        int user_id FK
+        datetime created_at
+        datetime updated_at
+    }
+
+    SENSOR {
+        int id PK
+        varchar name
+        enum sensor_type "temperature, humidity, light_intensity"
+        varchar unit
+        varchar mqtt_topic
+        varchar location
+        datetime created_at
+    }
+
+    DATA_SENSOR {
+        bigint id PK
+        int sensor_id FK
+        float value
+        datetime recorded_at
+    }
+
+    ACTION_HISTORY {
+        bigint id PK
+        int device_id FK
+        int user_id FK
+        enum action "ON, OFF"
+        enum triggered_by "user, system"
+        enum status "pending, success, failed, timeout"
+        datetime triggered_at
+        datetime responded_at
+    }

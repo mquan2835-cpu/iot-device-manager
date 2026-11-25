@@ -1,0 +1,13 @@
+{
+  "artboards": [
+    { "file": "Login.dc.html", "x": 0, "y": 0, "w": 1440, "h": 900, "title": "1. Login" },
+    { "file": "Main.dc.html", "x": 1560, "y": 0, "w": 1440, "h": 900, "title": "2. Dashboard" },
+    { "file": "DataSensor.dc.html", "x": 3120, "y": 0, "w": 1440, "h": 900, "title": "3. Data Sensor" },
+    { "file": "ActionHistory.dc.html", "x": 0, "y": 1020, "w": 1440, "h": 900, "title": "4. Action History" },
+    { "file": "Profile.dc.html", "x": 1560, "y": 1020, "w": 1440, "h": 900, "title": "5. Profile" }
+  ],
+  "annotations": [
+    { "id": "brief-note", "x": 3120, "y": 1020, "w": 300, "text": "Bài 1 - UI mockup tham khảo\nDung de dung lai trong Figma\n5 man hinh: Login, Dashboard, Data Sensor, Action History, Profile" }
+  ],
+  "launch": { "view": "canvas" }
+}

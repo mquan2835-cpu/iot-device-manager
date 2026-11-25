@@ -1,0 +1,20 @@
+{
+  "name": "mqtt-simulation",
+  "version": "1.0.0",
+  "description": "Bai 2.1 - Mo phong giao tiep MQTT bang 3 terminal (khong dung phan cung that)",
+  "main": "terminal1_hardware_simulator.js",
+  "scripts": {
+    "sensor": "node sub_sensor.js",
+    "status": "node sub_status.js",
+    "control": "node pub_control.js",
+    "hardware": "node terminal1_hardware_simulator.js",
+    "backend": "node terminal2_backend_simulator.js",
+    "monitor": "node terminal3_monitor.js",
+    "hardware:ptit": "node terminal1_hardware_ptit.js",
+    "backend:ptit": "node terminal2_backend_ptit.js",
+    "monitor:ptit": "node terminal3_monitor.js iot_ptit/#"
+  },
+  "dependencies": {
+    "mqtt": "^5.10.1"
+  }
+}

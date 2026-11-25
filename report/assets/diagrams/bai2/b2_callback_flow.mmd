@@ -1,0 +1,13 @@
+flowchart TD
+    A(["onMqttMessage(topic, payload)"]) --> B["Tách device_id từ topic<br/>home/device/{id}/set"]
+    B --> C{"Payload là JSON<br/>có trường action?"}
+    C -- Có --> C1["action = doc[&quot;action&quot;]"]
+    C -- Không --> C2["action = chuỗi thô (ON / OFF)"]
+    C1 --> D["trim + toUpperCase"]
+    C2 --> D
+    D --> E{"device_id thuộc {1,2,3}?"}
+    E -- Không --> X1["Cảnh báo, bỏ qua"]
+    E -- Có --> F{"action là ON hoặc OFF?"}
+    F -- Không --> X2["Cảnh báo lệnh lạ, bỏ qua<br/>(không tắt nhầm thiết bị)"]
+    F -- Có --> G["digitalWrite(pin, HIGH/LOW)<br/>lưu deviceState[id]"]
+    G --> H["PUBLISH home/device/{id}/status<br/>{&quot;device_id&quot;:id,&quot;state&quot;:&quot;ON/OFF&quot;}"]

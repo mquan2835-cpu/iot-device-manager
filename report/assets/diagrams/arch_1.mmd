@@ -1,0 +1,42 @@
+flowchart TB
+    subgraph L1["Tầng 1 - Perception (Cảm biến & Thiết bị)"]
+        SENSOR["Cảm biến DHT11<br/>(nhiệt độ, độ ẩm)"]
+        LED["3 LED mô phỏng<br/>Đèn / Quạt / Điều hòa"]
+        BOARD["NodeMCU ESP8266 / ESP32"]
+        SENSOR --- BOARD
+        LED --- BOARD
+    end
+
+    subgraph L2["Tầng 2 - Network (Truyền dẫn)"]
+        WIFI["Wi-Fi"]
+        MQTT["MQTT Broker<br/>(HiveMQ public / Mosquitto)"]
+        WIFI --- MQTT
+    end
+
+    subgraph L3["Tầng 3 - Middleware / Processing (Xử lý trung gian)"]
+        BE["Backend Node.js + Express<br/>MQTT Client + REST API + Socket.io"]
+        RULES["Rule Engine đơn giản<br/>(UC07: so sánh ngưỡng nhiệt độ)"]
+        BE --- RULES
+    end
+
+    subgraph L4["Tầng 4 - Application (Ứng dụng)"]
+        API["REST API<br/>(auth, devices, sensors, actions)"]
+        WS["Socket.io Realtime Channel"]
+    end
+
+    subgraph L5["Tầng 5 - Business (Người dùng cuối)"]
+        FE["Frontend React (Vite)<br/>Dashboard / Data Sensor / Action History / Profile"]
+        USER(["Người dùng"])
+        FE --- USER
+    end
+
+    DB[("MySQL<br/>User / Device / Sensor / DataSensor / ActionHistory")]
+
+    BOARD -- "publish/subscribe MQTT" --> WIFI
+    MQTT -- "home/sensor/+/data<br/>home/device/+/status" --> BE
+    BE -- "home/device/+/set" --> MQTT
+    BE --- API
+    BE --- WS
+    BE --- DB
+    API -- "HTTPS (Axios)" --- FE
+    WS -- "WebSocket" --- FE

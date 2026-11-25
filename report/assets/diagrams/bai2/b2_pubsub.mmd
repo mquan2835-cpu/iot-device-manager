@@ -1,0 +1,7 @@
+flowchart LR
+    P1["Publisher<br/>(ESP32-C3 / Terminal 1)"] -- "PUBLISH home/sensor/1/data" --> B(("MQTT Broker<br/>Mosquitto / HiveMQ"))
+    P2["Publisher<br/>(Backend / Terminal 2)"] -- "PUBLISH home/device/1/set" --> B
+    B -- "chuyển tiếp tới mọi client<br/>đã SUBSCRIBE topic khớp" --> S1["Subscriber<br/>Backend: home/sensor/+/data"]
+    B --> S2["Subscriber<br/>ESP32-C3: home/device/+/set"]
+    B --> S3["Subscriber<br/>Monitor: home/#"]
+    style B fill:#DBEAFE,stroke:#1D4ED8,stroke-width:2px

@@ -1,0 +1,13 @@
+sequenceDiagram
+    actor U as Người dùng
+    participant FE as Frontend (trang Action History)
+    participant BE as Backend (Express API)
+    participant DB as MySQL (ActionHistory Device User)
+
+    U->>FE: Chọn bộ lọc (thiết bị / khoảng thời gian) hoặc để trống = tất cả
+    FE->>BE: GET /api/actions?device_id=&from=&to=
+    BE->>DB: SELECT a.*, d.name, u.full_name FROM ActionHistory a JOIN Device d JOIN User u WHERE ...
+    DB-->>BE: danh sách bản ghi (kèm triggered_by: user/system)
+    BE-->>FE: 200 OK [ {device_name, action, triggered_by, status, triggered_at}, ... ]
+    FE-->>U: Hiển thị bảng: thời gian, thiết bị, hành động, người thực hiện, nguồn, trạng thái
+    Note over FE,U: Realtime: khi có action:update mới qua Socket.io, FE tự gọi lại API để bảng luôn mới nhất

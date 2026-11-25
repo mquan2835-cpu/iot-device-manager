@@ -1,0 +1,34 @@
+sequenceDiagram
+    actor U as Người dùng
+    participant FE as Frontend (React)
+    participant BE as Backend (Express API)
+    participant DB as MySQL (ActionHistory/Device)
+    participant MQ as MQTT Broker
+    participant HW as NodeMCU (ESP8266/ESP32 + LED)
+
+    U->>FE: Nhấn nút "Bật đèn"
+    FE->>FE: Optimistic UI - đổi ngay công tắc sang "ON" + đánh dấu "Đang chờ..."
+    FE->>BE: POST /api/devices/1/action { action: "ON" }
+    BE->>DB: INSERT ActionHistory(status=pending)
+    DB-->>BE: OK (action_id)
+    BE->>MQ: PUBLISH home/device/1/set  payload="ON"
+    BE-->>FE: 202 Accepted { action_id, status: pending }
+    BE->>BE: setTimeout(ACTION_TIMEOUT_MS) - bắt đầu đếm giờ chờ phản hồi
+
+    alt Hardware phản hồi trước khi hết hạn (luồng bình thường)
+        MQ->>HW: forward message topic home/device/1/set
+        HW->>HW: digitalWrite(LED_PIN, HIGH)
+        HW->>MQ: PUBLISH home/device/1/status payload="ON"
+        MQ->>BE: forward message topic home/device/1/status
+        BE->>BE: clearTimeout (huỷ job chờ, vì đã có phản hồi)
+        BE->>DB: UPDATE ActionHistory SET status=success, responded_at=NOW()
+        BE->>DB: UPDATE Device SET current_state="ON"
+        BE->>FE: Đẩy realtime (WebSocket) { device_id:1, state:"ON" }
+        FE-->>U: Chốt công tắc ở trạng thái "ON" (đổi màu xanh, bỏ trạng thái "Đang chờ")
+    else Quá ACTION_TIMEOUT_MS không nhận được home/device/1/status (luồng ngoại lệ - ESP mất kết nối Wi-Fi/MQTT)
+        Note over BE: Job setTimeout kích hoạt, kiểm tra thấy ActionHistory vẫn đang status=pending
+        BE->>DB: UPDATE ActionHistory SET status='timeout'
+        BE->>FE: Đẩy realtime (WebSocket) { action_id, device_id:1, status:'timeout' }
+        FE->>FE: Khôi phục công tắc về trạng thái TRƯỚC khi bấm (rollback optimistic update)
+        FE-->>U: Hiện cảnh báo đỏ "Thiết bị không phản hồi"
+    end

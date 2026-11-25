@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor U as Người dùng
+    participant FE as Frontend (trang Data Sensor)
+    participant BE as Backend (Express API)
+    participant DB as MySQL (DataSensor)
+
+    U->>FE: Chọn cảm biến + khoảng thời gian (from, to)
+    FE->>BE: GET /api/sensors?sensor_id=1&from=...&to=...
+    BE->>DB: SELECT * FROM DataSensor WHERE sensor_id=? AND recorded_at BETWEEN ? AND ?
+    alt Có dữ liệu
+        DB-->>BE: danh sách bản ghi (value, recorded_at)
+        BE-->>FE: 200 OK [ {value, recorded_at}, ... ]
+        FE-->>U: Vẽ line chart + bảng dữ liệu chi tiết
+    else Không có dữ liệu trong khoảng đã chọn
+        DB-->>BE: rows = []
+        BE-->>FE: 200 OK []
+        FE-->>U: Hiển thị "Không có dữ liệu"
+    end

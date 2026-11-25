@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600&display=swap">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:'Inter',system-ui,sans-serif; background:#F1F5F9; color:#0F172A; }
+    a { color:#2563EB; text-decoration:none; }
+    h1,h2,h3,.brand { font-family:'Manrope',system-ui,sans-serif; }
+
+    .app { display:flex; width:1440px; height:900px; overflow:hidden; }
+    .sidebar { width:252px; flex-shrink:0; background:#0F172A; color:#E2E8F0; display:flex; flex-direction:column; padding:26px 18px; }
+    .logo { display:flex; align-items:center; gap:10px; margin-bottom:34px; padding:0 6px; }
+    .logo-badge { width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#2563EB,#14B8A6);display:flex;align-items:center;justify-content:center; flex-shrink:0; }
+    .logo-text { font-weight:800; font-size:16px; color:#fff; letter-spacing:-0.02em; }
+    .logo-sub { font-size:11px; color:#64748B; font-weight:600; margin-top:1px; }
+    .nav { display:flex; flex-direction:column; gap:3px; }
+    .nav-item { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; color:#94A3B8; font-size:14px; font-weight:600; }
+    .nav-item.active { background:rgba(37,99,235,0.22); color:#fff; }
+    .nav-item svg { flex-shrink:0; }
+    .sidebar-footer { margin-top:auto; display:flex; align-items:center; gap:10px; padding:14px 8px 4px; border-top:1px solid rgba(148,163,184,0.16); }
+    .avatar { width:34px;height:34px;border-radius:50%; background:#14B8A6; display:flex;align-items:center;justify-content:center; color:#fff; font-weight:700; font-size:12px; flex-shrink:0; }
+    .sf-name { font-size:13px; font-weight:700; color:#fff; }
+    .sf-role { font-size:11px; color:#64748B; }
+
+    .main { flex:1; display:flex; flex-direction:column; min-width:0; }
+    .topbar { height:70px; flex-shrink:0; background:#fff; border-bottom:1px solid #E2E8F0; display:flex; align-items:center; justify-content:space-between; padding:0 30px; }
+    .page-title { font-size:19px; font-weight:800; letter-spacing:-0.02em; }
+    .page-sub { font-size:12px; color:#64748B; font-weight:500; margin-top:2px; }
+    .content { flex:1; padding:26px 30px; overflow:auto; }
+
+    .card { background:#fff; border:1px solid #E2E8F0; border-radius:16px; padding:20px; }
+    .filter-bar { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+    .select { display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; border:1.5px solid #E2E8F0; background:#fff; font-size:13px; font-weight:600; color:#334155; }
+    .chip { padding:9px 16px; border-radius:999px; font-size:12px; font-weight:700; }
+    .chip.active { background:#0F172A; color:#fff; }
+    .chip.inactive { background:#fff; border:1.5px solid #E2E8F0; color:#64748B; }
+
+    .legend { display:flex; gap:18px; margin-bottom:10px; }
+    .legend-item { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:#475569; }
+    .dot { width:9px;height:9px;border-radius:50%; }
+
+    table { width:100%; border-collapse:collapse; margin-top:18px; }
+    th { text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:#94A3B8; font-weight:800; padding:10px 12px; border-bottom:1.5px solid #F1F5F9; }
+    td { padding:12px; font-size:13px; color:#334155; font-weight:500; border-bottom:1px solid #F8FAFC; }
+    tr:last-child td { border-bottom:none; }
+    .tag { display:inline-flex; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:700; }
+  </style>
+</helmet>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-badge"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg></div>
+      <div><div class="logo-text">SmartHome IoT</div><div class="logo-sub">Device Manager</div></div>
+    </div>
+    <div class="nav">
+      <div class="nav-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</div>
+      <div class="nav-item active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 3 5-7"/></svg>Data Sensor</div>
+      <div class="nav-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Action History</div>
+      <div class="nav-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg>Profile</div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="avatar">MQ</div>
+      <div><div class="sf-name">Đỗ Minh Quân</div><div class="sf-role">Chủ nhà</div></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="page-title">Data Sensor</div>
+        <div class="page-sub">Lịch sử dữ liệu cảm biến nhiệt độ &amp; độ ẩm</div>
+      </div>
+      <div class="avatar">MQ</div>
+    </div>
+
+    <div class="content">
+      <div class="filter-bar">
+        <div class="select">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.6"/><path d="M12 12c2-3 1-7-2-8-2 3-1 6 2 8Z"/></svg>
+          Tất cả cảm biến
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="select">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+          01/09/2026 – 13/09/2026
+        </div>
+        <div style="flex:1"></div>
+        <div class="chip active">24 giờ</div>
+        <div class="chip inactive">7 ngày</div>
+        <div class="chip inactive">30 ngày</div>
+      </div>
+
+      <div class="card">
+        <div class="legend">
+          <div class="legend-item"><span class="dot" style="background:#E11D48"></span>Nhiệt độ (°C)</div>
+          <div class="legend-item"><span class="dot" style="background:#2563EB"></span>Độ ẩm (%)</div>
+        </div>
+        <svg width="100%" height="230" viewBox="0 0 1320 230" preserveAspectRatio="none">
+          <line x1="0" y1="57" x2="1320" y2="57" stroke="#F1F5F9" stroke-width="1"/>
+          <line x1="0" y1="115" x2="1320" y2="115" stroke="#F1F5F9" stroke-width="1"/>
+          <line x1="0" y1="172" x2="1320" y2="172" stroke="#F1F5F9" stroke-width="1"/>
+          <polyline points="0,150 120,140 240,145 360,110 480,120 600,80 720,90 840,60 960,85 1080,70 1200,95 1320,75" fill="none" stroke="#E11D48" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="0,180 120,170 240,175 360,160 480,165 600,140 720,150 840,130 960,145 1080,135 1200,150 1320,138" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <div style="font-size:14px;font-weight:800;margin-bottom:4px">Chi tiết dữ liệu</div>
+        <table>
+          <tr><th>Thời gian</th><th>Cảm biến</th><th>Giá trị</th><th>Vị trí</th></tr>
+          <tr><td>13/09/2026 14:32:05</td><td>Nhiệt độ</td><td><span class="tag" style="background:#FEE2E2;color:#DC2626">28.4 °C</span></td><td>Phòng khách</td></tr>
+          <tr><td>13/09/2026 14:32:05</td><td>Độ ẩm</td><td><span class="tag" style="background:#DBEAFE;color:#1D4ED8">61 %</span></td><td>Phòng khách</td></tr>
+          <tr><td>13/09/2026 14:31:05</td><td>Nhiệt độ</td><td><span class="tag" style="background:#FEE2E2;color:#DC2626">28.2 °C</span></td><td>Phòng khách</td></tr>
+          <tr><td>13/09/2026 14:31:05</td><td>Độ ẩm</td><td><span class="tag" style="background:#DBEAFE;color:#1D4ED8">60 %</span></td><td>Phòng khách</td></tr>
+          <tr><td>13/09/2026 14:30:05</td><td>Nhiệt độ</td><td><span class="tag" style="background:#FEE2E2;color:#DC2626">28.1 °C</span></td><td>Phòng khách</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

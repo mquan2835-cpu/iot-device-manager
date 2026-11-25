@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant HW as NodeMCU (DHT11)
+    participant MQ as MQTT Broker
+    participant BE as Backend (MQTT subscriber)
+    participant DB as MySQL (DataSensor)
+    participant FE as Frontend (React)
+    actor U as Người dùng
+
+    loop mỗi 5 giây
+        HW->>HW: đọc DHT11 (temperature, humidity)
+        HW->>MQ: PUBLISH home/sensor/1/data { temp, humidity }
+    end
+    MQ->>BE: forward message
+    BE->>DB: INSERT DataSensor(sensor_id, value, recorded_at)
+    BE->>FE: Đẩy realtime (WebSocket) sensor mới
+    FE-->>U: Cập nhật biểu đồ Dashboard / trang Data Sensor

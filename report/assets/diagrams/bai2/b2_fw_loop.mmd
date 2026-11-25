@@ -1,0 +1,12 @@
+flowchart TD
+    L(["Bắt đầu loop()"]) --> E{"Wi-Fi còn<br/>kết nối?"}
+    E -- Không --> W["setupWifi()"] --> F
+    E -- Có --> F{"MQTT còn<br/>kết nối?"}
+    F -- Không --> G["reconnectMqtt():<br/>connect(clientId)<br/>SUBSCRIBE home/device/1,2,3/set<br/>PUBLISH trạng thái 3 LED"] --> H
+    F -- Có --> H["mqttClient.loop()<br/>có gói tin thì gọi onMqttMessage"]
+    H --> I{"Đã đủ 5000 ms<br/>kể từ lần đọc trước?"}
+    I -- Chưa --> Z(["Kết thúc vòng, lặp lại"])
+    I -- Rồi --> J["Đọc DHT11:<br/>readTemperature, readHumidity"]
+    J --> K{"Giá trị lỗi<br/>(isnan)?"}
+    K -- Có --> K1["In lỗi đọc cảm biến"] --> Z
+    K -- Không --> M["PUBLISH home/sensor/1/data<br/>PUBLISH home/sensor/2/data"] --> Z
